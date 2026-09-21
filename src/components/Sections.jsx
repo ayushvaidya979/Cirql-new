@@ -3,8 +3,10 @@ import {
   ScanIllustration, TruckIllustration,
   PersonDoodle, EwasteDoodle, FactoryDoodle, WalletDoodle,
 } from './Doodles.jsx'
-import { useEffect, useRef } from 'react'
-import { Link } from '../router.jsx'
+import { useEffect, useRef, useState } from 'react'
+import { Link, navigate } from '../router.jsx'
+import CameraScan from './CameraScan.jsx'
+import { SCAN_HANDOFF_KEY } from '../lib/scanHandoff.js'
 import './Sections.css'
 
 /*
@@ -130,6 +132,17 @@ const STEPS = [
 ]
 
 export function HowItWorks() {
+  const [scanning, setScanning] = useState(false)
+  // Hand the result to the valuation page, which starts at the age question.
+  const toPrice = (m) => {
+    try {
+      sessionStorage.setItem(SCAN_HANDOFF_KEY, JSON.stringify(m))
+    } catch {
+      /* private mode: the visitor just picks the device again */
+    }
+    setScanning(false)
+    navigate('/sell')
+  }
   return (
     <Section className="section section--tint section--cover" id="how-it-works">
       <LeafTrail className="deco deco--trail" data-fly="trail" />
@@ -152,73 +165,13 @@ export function HowItWorks() {
           </ol>
           <div className="actions" data-reveal>
             <Link className="btn btn--primary" to="/sell">Select a device</Link>
-            <Link className="btn btn--ghost" to="/sell">Upload photo of device</Link>
+            <button type="button" className="btn btn--ghost" onClick={() => setScanning(true)}>
+              <Icons.scan width="18" height="18" /> Scan device
+            </button>
           </div>
         </div>
       </div>
-    </Section>
-  )
-}
-
-/* ============================ 5. Dashboard ============================ */
-const HISTORY = [
-  ['Smartphone', '12 Sep', '₹2,450', 'Paid'],
-  ['Laptop', '28 Aug', '₹3,100', 'Paid'],
-  ['Chargers ×3', '02 Aug', '₹180', 'Collected'],
-]
-const BARS = [30, 55, 40, 70, 48, 88]
-
-export function Dashboard() {
-  return (
-    <Section className="section section--cream" id="dashboard">
-      <DotGrid className="deco deco--tr" />
-      <div className="container split split--reverse">
-        <div className="split__text">
-          <Heading a="Your recycling," b="all in one place" sub="Every device you’ve submitted, every rupee earned and every kilo kept out of landfill, tracked on your personal dashboard." />
-          <CheckList
-            items={[
-              ['Recycling history', 'A record of every device you’ve submitted and recycled.'],
-              ['Earnings & rewards', 'Track estimated earnings, payouts and reward points.'],
-              ['Impact tracking', 'See how much e-waste you’ve helped recover.'],
-              ['Your profile', 'Saved addresses, payment details and preferences.'],
-            ]}
-          />
-        </div>
-
-        <div className="dash" data-reveal>
-          <div className="dash__head">
-            <span className="dash__avatar">A</span>
-            <span>
-              <strong>Hi, Aarav</strong>
-              <em>Your recycling this year</em>
-            </span>
-            <Leaf className="dash__leaf" size={34} />
-          </div>
-          <div className="dash__stats">
-            <div><em>Devices</em><strong>12</strong></div>
-            <div><em>Earned</em><strong>₹8,450</strong></div>
-            <div><em>E-waste</em><strong>9.6 kg</strong></div>
-          </div>
-          <div className="dash__chart">
-            <span className="dash__label">Earnings</span>
-            <div className="dash__bars">
-              {BARS.map((h, i) => (
-                <span key={i} style={{ '--h': h / 100, '--d': `${250 + i * 70}ms` }} />
-              ))}
-            </div>
-          </div>
-          <ul className="dash__list">
-            {HISTORY.map(([d, date, amt, status]) => (
-              <li key={d}>
-                <span className="dash__dot" />
-                <span className="dash__device"><strong>{d}</strong><em>{date}</em></span>
-                <span className="dash__amt">{amt}</span>
-                <span className={`dash__status ${status === 'Paid' ? 'is-paid' : ''}`}>{status}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+      <CameraScan open={scanning} onClose={() => setScanning(false)} onResult={toPrice} actionLabel="Get my price" />
     </Section>
   )
 }
@@ -310,7 +263,7 @@ export function Partners() {
             })}
           </div>
           <div className="actions" data-reveal>
-            <a className="btn btn--light" href="#partner">Become a partner</a>
+            <Link className="btn btn--light" to="/partner">Become a partner</Link>
           </div>
         </div>
         <div className="split__art" data-reveal>

@@ -61,12 +61,13 @@ export const CONDITIONS = [
   { id: 'dead', name: 'Non-functional', text: 'Doesn’t turn on or has major faults.', factor: 0.12 },
 ]
 
-export function estimate(categoryId, brandId, ageId, conditionId) {
+// `baseOverride` is an exact-model price from the device catalogue, when known.
+export function estimate(categoryId, brandId, ageId, conditionId, baseOverride) {
   const cat = CATEGORIES.find((c) => c.id === categoryId)
   const brand = cat?.brands.find((b) => b.id === brandId)
   const age = AGES.find((a) => a.id === ageId)
   const cond = CONDITIONS.find((c) => c.id === conditionId)
   if (!cat || !brand || !age || !cond) return 0
-  const raw = brand.base * age.factor * cond.factor
+  const raw = (baseOverride || brand.base) * age.factor * cond.factor
   return Math.max(cat.floor, Math.round(raw / 50) * 50)
 }

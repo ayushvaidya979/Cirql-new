@@ -2,11 +2,16 @@ import { useEffect, useRef, useState } from 'react'
 import { CATEGORIES, AGES, CONDITIONS, estimate } from '../data/pricing.js'
 import { DeviceArt, Stage, PickupStage } from '../components/DeviceDoodles.jsx'
 import Pickup from './Pickup.jsx'
+import PhotoStep from './PhotoStep.jsx'
+import { SCAN_HANDOFF_KEY } from '../lib/scanHandoff.js'
 import { Icons, Leaf } from '../components/Doodles.jsx'
 import { Link } from '../router.jsx'
 import './SellPage.css'
 
-const STEPS = ['Device', 'Brand', 'Age', 'Condition', 'Your price']
+const STEPS = ['Device', 'Brand', 'Age', 'Condition', 'Photo', 'Your price']
+const PHOTO = 4
+const RESULT = 5
+
 const AUTO_ADVANCE_MS = 380
 
 function useCountUp(value, active) {
@@ -36,7 +41,8 @@ const rupees = (n) => '₹' + n.toLocaleString('en-IN')
 export default function SellPage() {
   const [step, setStep] = useState(0)
   const [dir, setDir] = useState(1)
-  const [pick, setPick] = useState({ category: null, brand: null, age: null, condition: null })
+  const EMPTY = { category: null, brand: null, age: null, condition: null, model: null, basePrice: null, scanned: null }
+  const [pick, setPick] = useState(EMPTY)
   const timer = useRef(0)
   const [pickup, setPickup] = useState(null) // null | { phase, match }
 
@@ -52,8 +58,9 @@ export default function SellPage() {
   const brand = cat?.brands.find((b) => b.id === pick.brand)
   const age = AGES.find((a) => a.id === pick.age)
   const cond = CONDITIONS.find((c) => c.id === pick.condition)
-  const price = estimate(pick.category, pick.brand, pick.age, pick.condition)
-  const done = step === 4
+  const price = estimate(pick.category, pick.brand, pick.age, pick.condition, pick.basePrice)
+  const deviceName = pick.model || (brand && cat ? `${brand.name === 'Other' ? '' : brand.name + ' '}${cat.name}` : '')
+  const done = step === RESULT
   const shownPrice = useCountUp(price, done)
 
   const go = (to) => {
@@ -68,6 +75,8 @@ export default function SellPage() {
       const next = { ...p, [key]: value }
       // A different device type means its brand list changes too.
       if (key === 'category' && value !== p.category) next.brand = null
+      // Picking device or brand by hand drops any model found by a photo scan.
+      if (key === 'category' || key === 'brand') Object.assign(next, { model: null, basePrice: null, scanned: null })
       return next
     })
     clearTimeout(timer.current)
@@ -75,8 +84,33 @@ export default function SellPage() {
   }
 
   const restart = () => {
-    setPick({ category: null, brand: null, age: null, condition: null })
+    setPick(EMPTY)
     go(0)
+  }
+
+  const fromScan = (m) => ({ category: m.category, brand: m.brand_id, model: m.model, basePrice: m.base_price ?? null, scanned: m })
+
+  // Arrived from "Scan device" on the home page: device + brand are known, start at the age question.
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(SCAN_HANDOFF_KEY)
+      if (!raw) return
+      sessionStorage.removeItem(SCAN_HANDOFF_KEY)
+      setPick({ ...EMPTY, ...fromScan(JSON.parse(raw)) })
+      setDir(1)
+      setStep(2)
+    } catch {
+      /* storage unavailable: start normally */
+    }
+  }, [])
+
+  // Photo step finished. A match either confirms the choice or replaces it.
+  const photoDone = (m, { switchTo } = {}) => {
+    if (m) {
+      const same = m.category === pick.category && m.brand_id === pick.brand
+      if (same || switchTo) setPick((p) => ({ ...p, ...fromScan(m) }))
+    }
+    go(RESULT)
   }
 
   const pickupCaption = pickup && {
@@ -88,9 +122,10 @@ export default function SellPage() {
   const caption = pickupCaption || [
     'Every old device has a story. Let’s find out what yours is worth.',
     `A ${cat?.name.toLowerCase()}! Who made it?`,
-    `A ${brand?.name === 'Other' ? 'trusty' : brand?.name} ${cat?.name.toLowerCase()}. How long has it been with you?`,
+    pick.model ? `A ${pick.model}. How long has it been with you?` : `A ${brand?.name === 'Other' ? 'trusty' : brand?.name} ${cat?.name.toLowerCase()}. How long has it been with you?`,
     `${age?.label}. How is it holding up?`,
-    `Your ${brand?.name === 'Other' ? '' : brand?.name + ' '}${cat?.name.toLowerCase()} gets a second life, and you get paid.`,
+    `Snap a quick photo of your ${deviceName} so we can verify it.`,
+    `Your ${deviceName} gets a second life, and you get paid.`,
   ][step]
 
   return (
@@ -110,7 +145,7 @@ export default function SellPage() {
             <ol className="stepper" style={{ '--p': step / (STEPS.length - 1) }}>
               {STEPS.map((s, i) => (
                 <li key={s} className={i < step ? 'is-done' : i === step ? 'is-now' : ''}>
-                  <button type="button" disabled={i > step || done && i === 4} onClick={() => go(i)}>
+                  <button type="button" disabled={i > step || (done && i === RESULT)} onClick={() => go(i)}>
                     <span className="stepper__dot">{i < step ? <Icons.check width="14" height="14" /> : i + 1}</span>
                     <span className="stepper__label">{s}</span>
                   </button>
@@ -196,16 +231,28 @@ export default function SellPage() {
                 </>
               )}
 
-              {step === 4 && pickup && (
+              {step === PHOTO && cat && (
+                <>
+                  <h2>Scan your device</h2>
+                  <p className="panel__hint">A quick photo lets our AI verify the exact model.</p>
+                  <PhotoStep
+                    chosen={{ category: pick.category, brand_id: pick.brand, brandName: brand?.name, categoryName: cat.name }}
+                    scanned={pick.scanned}
+                    onDone={photoDone}
+                  />
+                </>
+              )}
+
+              {step === RESULT && pickup && (
                 <Pickup
-                  summary={`${brand?.name === 'Other' ? '' : brand?.name + ' '}${cat?.name} · ${cond?.name}`}
+                  summary={`${deviceName} · ${cond?.name}`}
                   payout={rupees(price)}
                   onPhase={(phase, match) => setPickup({ phase, match })}
                   onBack={() => setPickup(null)}
                 />
               )}
 
-              {step === 4 && !pickup && (
+              {step === RESULT && !pickup && (
                 <div className="result">
                   <p className="result__eyebrow">You’ll receive</p>
                   <p className="result__price">
@@ -218,7 +265,7 @@ export default function SellPage() {
 
                   <ul className="result__summary">
                     {[
-                      ['Device', cat?.name, 0],
+                      ['Device', pick.model || cat?.name, 0],
                       ['Brand', brand?.name, 1],
                       ['Age', age?.label, 2],
                       ['Condition', cond?.name, 3],
@@ -241,7 +288,7 @@ export default function SellPage() {
               )}
             </div>
 
-            {step > 0 && step < 4 && (
+            {step > 0 && step < RESULT && (
               <button type="button" className="wizard__back" onClick={() => go(step - 1)}>
                 <Icons.arrow width="16" height="16" /> Back
               </button>

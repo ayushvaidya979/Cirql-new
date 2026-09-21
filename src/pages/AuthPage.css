@@ -1,0 +1,111 @@
+.auth {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: calc(var(--header-h) + 24px) var(--gutter) 60px;
+  background: var(--bg);
+  overflow: clip;
+}
+.auth__deco { position: absolute; left: 5%; bottom: 60px; pointer-events: none; }
+.auth__card {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  width: min(920px, 100%);
+  border-radius: 32px;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(20, 36, 26, 0.04), 0 30px 60px -30px rgba(20, 36, 26, 0.3);
+  animation: auth-in 0.6s cubic-bezier(0.3, 1.3, 0.5, 1) both;
+}
+@keyframes auth-in { from { opacity: 0; transform: translateY(20px) scale(0.98); } }
+.auth__side {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 36px;
+  background: var(--tint);
+  text-align: center;
+}
+.auth__art { width: 100%; max-width: 300px; height: auto; margin: 0 auto 10px; overflow: visible; }
+.auth__side h2 {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--sage);
+}
+.auth__side p { margin: 0; font-weight: 500; color: var(--muted); }
+.auth__main { padding: 38px clamp(24px, 4vw, 44px); }
+.auth__tabs {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 20px;
+  border-radius: 999px;
+  background: var(--tint);
+}
+.auth__tabs button {
+  padding: 8px 18px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+.auth__tabs button.is-on { background: #fff; color: var(--sage); box-shadow: 0 2px 8px rgba(20, 36, 26, 0.1); }
+.auth h1 {
+  margin: 0 0 18px;
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.auth__form { display: grid; gap: 14px; animation: auth-fade 0.35s ease both; }
+@keyframes auth-fade { from { opacity: 0; transform: translateY(8px); } }
+.auth__form label { display: grid; gap: 6px; }
+.auth__form label span { font-size: 0.85rem; font-weight: 700; color: var(--ink); }
+.auth__form input {
+  padding: 13px 14px;
+  border: 2px solid #e4e8df;
+  border-radius: 14px;
+  background: #fbfcf9;
+  font: inherit;
+  font-weight: 500;
+  color: var(--ink);
+}
+.auth__form input:focus { outline: none; border-color: var(--sage); background: #fff; }
+.auth__error { margin: 0; padding: 10px 14px; border-radius: 12px; background: #fdecea; color: #a33b16; font-size: 0.9rem; font-weight: 600; }
+.auth__submit { width: 100%; border: 0; font: inherit; font-weight: 700; letter-spacing: 0.06em; cursor: pointer; }
+.auth__submit:disabled { opacity: 0.6; cursor: default; }
+.auth__switch { margin: 18px 0 0; font-size: 0.9rem; color: var(--muted); }
+.auth__switch button { padding: 0; border: 0; background: none; font: inherit; font-weight: 700; color: var(--sage); text-decoration: underline; cursor: pointer; }
+.auth__done { display: grid; justify-items: center; gap: 10px; padding: 30px 0; text-align: center; animation: auth-in 0.5s ease both; }
+.auth__done h1 { margin: 6px 0 0; }
+.auth__done p { margin: 0 0 8px; color: var(--muted); font-weight: 500; }
+.auth__done-icon { display: grid; place-items: center; width: 76px; height: 76px; border-radius: 50%; background: var(--sage); color: #fff; }
+.auth__done .btn--ghost { background: none; font: inherit; font-weight: 700; letter-spacing: 0.08em; cursor: pointer; }
+
+.auth__lock { animation: auth-bob 2.4s ease-in-out infinite; }
+@keyframes auth-bob { 50% { transform: translateY(-8px) rotate(8deg); } }
+.auth__leaf { animation: auth-leaf 3s ease-in-out infinite; transform-box: fill-box; transform-origin: 0 100%; }
+@keyframes auth-leaf { 50% { transform: rotate(-10deg) translateY(-4px); } }
+.auth__btn { animation: auth-glow 1.6s ease-in-out infinite; }
+@keyframes auth-glow { 50% { fill: #6fcf4e; } }
+
+@media (max-width: 760px) {
+  .auth__card { grid-template-columns: 1fr; }
+  .auth__side { padding: 24px; }
+  .auth__art { max-width: 200px; }
+  .auth__side h2 { font-size: 1.5rem; }
+  .auth__deco { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .auth *, .auth__card { animation: none !important; }
+}

@@ -1,0 +1,161 @@
+.cam {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(19, 36, 26, 0.72);
+  animation: cam-fade 0.25s ease both;
+}
+@keyframes cam-fade { from { opacity: 0; } }
+.cam__panel {
+  position: relative;
+  width: min(460px, 100%);
+  max-height: calc(100svh - 32px);
+  overflow: auto;
+  padding: 22px;
+  border-radius: 28px;
+  background: #fff;
+  text-align: center;
+  animation: cam-pop 0.4s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+}
+@keyframes cam-pop { from { opacity: 0; transform: translateY(20px) scale(0.96); } }
+.cam__close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--tint);
+  color: var(--ink);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.cam__eyebrow {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.cam__title {
+  margin: 4px 0 14px;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.cam__view {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #1f2a24;
+}
+.cam__view video,
+.cam__view img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.cam__view video.is-hidden { visibility: hidden; }
+.cam__empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 10px;
+  padding: 24px;
+  color: #cfe8d6;
+}
+.cam__empty p { margin: 0; max-width: 26ch; font-weight: 600; }
+.cam__corner {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border: 4px solid #6fcf4e;
+  animation: cam-breathe 1.8s ease-in-out infinite;
+}
+.cam__corner--tl { top: 16%; left: 16%; border-right: 0; border-bottom: 0; border-radius: 14px 0 0 0; }
+.cam__corner--tr { top: 16%; right: 16%; border-left: 0; border-bottom: 0; border-radius: 0 14px 0 0; }
+.cam__corner--bl { bottom: 16%; left: 16%; border-right: 0; border-top: 0; border-radius: 0 0 0 14px; }
+.cam__corner--br { bottom: 16%; right: 16%; border-left: 0; border-top: 0; border-radius: 0 0 14px 0; }
+@keyframes cam-breathe { 50% { transform: scale(1.08); opacity: 0.7; } }
+.cam__beam {
+  position: absolute;
+  left: 16%;
+  right: 16%;
+  top: 16%;
+  height: 3px;
+  border-radius: 3px;
+  background: #6fcf4e;
+  box-shadow: 0 0 18px 6px rgba(111, 207, 78, 0.6);
+  animation: cam-beam 1.6s ease-in-out infinite alternate;
+}
+.is-scanning .cam__beam { animation-duration: 0.7s; }
+@keyframes cam-beam { to { top: 84%; } }
+.cam__result {
+  display: grid;
+  gap: 4px;
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 16px;
+  background: var(--tint);
+  animation: cam-pop 0.4s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+}
+.cam__result strong { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; text-transform: uppercase; color: var(--sage); }
+.cam__result span { font-size: 0.88rem; font-weight: 600; color: var(--ink); }
+.cam__result em { font-style: normal; font-size: 0.82rem; color: var(--muted); }
+.cam__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+.cam__actions .btn { height: 46px; padding: 0 20px; font-size: 0.88rem; }
+.cam__actions .btn--ghost { background: #fff; font: inherit; font-size: 0.88rem; font-weight: 700; letter-spacing: 0.08em; cursor: pointer; }
+.cam__shutter {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border: 4px solid var(--sage);
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+}
+.cam__shutter span {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--sage);
+  transition: transform 0.15s;
+}
+.cam__shutter:active span { transform: scale(0.85); }
+.cam__upload {
+  flex-basis: 100%;
+  padding: 6px;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--sage);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cam, .cam__panel, .cam__result, .cam__corner, .cam__beam { animation: none; }
+}

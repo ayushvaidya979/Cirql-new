@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
+import { Link } from '../router.jsx'
 import './Hero.css'
 
 /* ------------------------------------------------------------------ *
@@ -342,6 +343,7 @@ export default function Hero() {
             <a className="btn btn--primary" href="#how-it-works" onClick={goToNext}>
               Check device value
             </a>
+            <Link className="btn btn--ghost" to="/partner">Become a partner</Link>
           </div>
         </div>
 
