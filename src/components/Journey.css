@@ -1,0 +1,207 @@
+.journey__spark { top: 96px; left: 14%; }
+
+.journey__track {
+  position: relative;
+  display: grid;
+  gap: clamp(40px, 7vw, 96px);
+  padding: 20px 0 40px;
+}
+.journey__road {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.journey__base {
+  fill: none;
+  stroke: #c9e2bb;
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 2 14;
+}
+.journey__drawn {
+  fill: none;
+  stroke: url(#road-grad);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+.journey__rider { transition: opacity 0.3s; }
+.journey__rider circle { filter: drop-shadow(0 6px 10px rgba(30, 158, 87, 0.3)); }
+.journey__rider-icon { animation: j-spin 5s linear infinite; }
+
+/* ---------- a stop: art · node · text ---------- */
+.stop {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 110px 1fr;
+  grid-template-areas: 'art node text';
+  align-items: center;
+}
+.stop--right { grid-template-areas: 'text node art'; }
+.stop--right .stop__text { text-align: right; }
+.stop--right .stop__text p { margin-left: auto; }
+
+.stop__art {
+  grid-area: art;
+  max-width: 400px;
+  width: 100%;
+  justify-self: center;
+  opacity: 0.35;
+  transform: scale(0.92);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+}
+.stop__art svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+.stop__node {
+  grid-area: node;
+  justify-self: center;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 3px solid #c9e2bb;
+  background: #fff;
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  transition: background-color 0.4s, border-color 0.4s, color 0.4s, transform 0.4s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+.stop__text {
+  grid-area: text;
+  opacity: 0.4;
+  transform: translate3d(0, 16px, 0);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+}
+.stop__tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sage-light);
+}
+.stop__text h3 {
+  margin: 6px 0 8px;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  font-weight: 600;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--sage);
+}
+.stop__text p {
+  max-width: 38ch;
+  margin: 0 0 14px;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.65;
+  color: var(--muted);
+}
+.stop__chip {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--leaf-soft);
+  color: var(--sage);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+/* Reached: the stop lights up and its doodle comes alive. */
+.stop.is-reached .stop__art { opacity: 1; transform: none; }
+.stop.is-reached .stop__text { opacity: 1; transform: none; }
+.stop.is-reached .stop__node {
+  border-color: var(--sage);
+  background: var(--sage);
+  color: #fff;
+  transform: scale(1.12);
+  box-shadow: 0 0 0 7px var(--leaf-soft);
+}
+
+/* ---------- doodle animations (only once a stop is reached) ---------- */
+.j-pop, .j-grow, .j-fill { transform-box: fill-box; }
+.is-reached .j-pop {
+  transform-origin: center;
+  animation: j-pop 0.6s cubic-bezier(0.3, 1.5, 0.5, 1) 0.15s both;
+}
+.is-reached .j-pop--late { animation-delay: 0.7s; }
+.is-reached .j-pop--2 { animation-delay: 0.3s; }
+.is-reached .j-pop--3 { animation-delay: 0.45s; }
+@keyframes j-pop { from { opacity: 0; transform: scale(0.4); } }
+
+.is-reached .j-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: j-pulse 1.4s ease-in-out infinite;
+}
+@keyframes j-pulse { 50% { transform: scale(1.35); } }
+
+.is-reached .j-spin, .journey__rider-icon { animation: j-spin 4s linear infinite; }
+@keyframes j-spin { to { rotate: 360deg; } }
+
+.is-reached .j-drive { animation: j-drive 1s cubic-bezier(0.2, 0.8, 0.3, 1) both; }
+@keyframes j-drive { from { transform: translateX(150px); opacity: 0; } }
+.is-reached .j-speed { animation: j-fade 0.6s 0.9s both; }
+@keyframes j-fade { to { opacity: 0; } }
+
+.is-reached .j-fill {
+  transform-origin: left center;
+  animation: j-fill 1.6s var(--ease-out) 0.3s both;
+}
+@keyframes j-fill { from { transform: scaleX(0); } }
+
+.is-reached .j-bit { animation: j-bit 2.4s ease-in-out infinite; animation-delay: calc(var(--i) * 0.3s); }
+@keyframes j-bit {
+  0%, 100% { opacity: 0; transform: translateY(6px); }
+  30%, 60% { opacity: 1; transform: none; }
+  90% { opacity: 0; transform: translateY(-10px); }
+}
+
+.is-reached .j-belt { animation: j-belt 3s linear infinite; }
+@keyframes j-belt {
+  0% { transform: translateX(-24px); opacity: 0; }
+  12%, 88% { opacity: 1; }
+  100% { transform: translateX(24px); opacity: 0; }
+}
+.is-reached .j-drop { animation: j-dash 0.8s linear infinite; }
+@keyframes j-dash { to { stroke-dashoffset: -14; } }
+
+.j-twinkle { transform-box: fill-box; transform-origin: center; }
+.is-reached .j-twinkle { animation: j-twinkle 1.8s ease-in-out infinite; }
+.is-reached .j-twinkle--2 { animation-delay: 0.5s; }
+.is-reached .j-twinkle--3 { animation-delay: 1s; }
+@keyframes j-twinkle {
+  0%, 100% { transform: scale(0.6); opacity: 0.5; }
+  50% { transform: scale(1.1) rotate(45deg); opacity: 1; }
+}
+
+.is-reached .j-grow { transform-origin: left bottom; animation: j-pop 0.8s cubic-bezier(0.3, 1.5, 0.5, 1) 0.5s both; }
+.is-reached .j-coin { animation: j-bob 1.6s ease-in-out 0.6s infinite; }
+@keyframes j-bob { 50% { transform: translateY(-8px); } }
+
+/* ---------- tablet & phone: road on the left ---------- */
+@media (max-width: 900px) {
+  .journey__track { gap: 48px; }
+  .stop,
+  .stop--right {
+    grid-template-columns: 56px 1fr;
+    grid-template-areas: 'node art' 'node text';
+    column-gap: 16px;
+    row-gap: 10px;
+  }
+  .stop__node { align-self: start; margin-top: 30px; width: 40px; height: 40px; font-size: 1rem; }
+  .stop--right .stop__text { text-align: left; }
+  .stop--right .stop__text p { margin-left: 0; }
+  .stop__art { max-width: 340px; justify-self: start; }
+  .journey__spark { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stop__art, .stop__text { transition: opacity 0.3s; transform: none; }
+  [class*='j-'], .journey__rider-icon { animation: none !important; }
+}
