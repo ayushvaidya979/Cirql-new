@@ -258,7 +258,7 @@ export default function Hero() {
         })
         if (disposed) return
         if (!ok) continue
-        img.decode().catch(() => {}) // warm the decode off the main thread
+        img.decode().catch(() => { }) // warm the decode off the main thread
         frames[i] = img
         // Repaint if this frame is a closer match than what's on screen.
         if (Math.abs(i - Math.round(current)) <= 32) {

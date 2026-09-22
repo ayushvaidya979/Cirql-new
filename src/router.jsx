@@ -1,9 +1,20 @@
 import { useSyncExternalStore } from 'react'
 
+/* Prevent the browser from auto-restoring a mid-hero scroll position
+   when the user presses the back button. We always want to start at the top. */
+if (typeof window !== 'undefined') {
+  window.history.scrollRestoration = 'manual'
+}
+
 /* A tiny history-API router: the site only has a couple of pages. */
 const subscribe = (cb) => {
-  window.addEventListener('popstate', cb)
-  return () => window.removeEventListener('popstate', cb)
+  // Store the wrapper so removeEventListener can reference the exact same function.
+  const handler = () => {
+    window.scrollTo(0, 0)
+    cb()
+  }
+  window.addEventListener('popstate', handler)
+  return () => window.removeEventListener('popstate', handler)
 }
 
 export const usePath = () => useSyncExternalStore(subscribe, () => window.location.pathname)

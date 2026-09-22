@@ -33,7 +33,11 @@
 body {
   margin: 0;
   background: var(--bg);
+  /* Reserve scrollbar space at all times — prevents the ~17px layout
+     shift that moves the hero text when navigating between pages. */
+  scrollbar-gutter: stable;
 }
+
 
 a {
   color: inherit;

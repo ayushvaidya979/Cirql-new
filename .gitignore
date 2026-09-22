@@ -27,3 +27,4 @@ dist-ssr
 .env.local
 ml/.venv/
 ml/runs/
+__pycache__/

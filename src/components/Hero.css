@@ -25,10 +25,10 @@
   width: min(82vw, calc((100svh - var(--header-h)) * 16 / 9));
   aspect-ratio: 16 / 9;
   /* Soften the edges so the frame melts into the page. */
-  mask-image: linear-gradient(to right, transparent 0, rgba(0,0,0,.35) 12%, #000 26%, #000 100%),
+  mask-image: linear-gradient(to right, transparent 0, rgba(0, 0, 0, .35) 12%, #000 26%, #000 100%),
     linear-gradient(to bottom, transparent 0, #000 4%, #000 96%, transparent 100%);
   mask-composite: intersect;
-  -webkit-mask-image: linear-gradient(to right, transparent 0, rgba(0,0,0,.35) 12%, #000 26%, #000 100%),
+  -webkit-mask-image: linear-gradient(to right, transparent 0, rgba(0, 0, 0, .35) 12%, #000 26%, #000 100%),
     linear-gradient(to bottom, transparent 0, #000 4%, #000 96%, transparent 100%);
   -webkit-mask-composite: source-in;
   pointer-events: none;
@@ -74,6 +74,7 @@
   grid-area: 1 / 1;
   pointer-events: none;
 }
+
 .stage.is-active {
   pointer-events: auto;
 }
@@ -88,13 +89,17 @@
   letter-spacing: 0.01em;
   text-transform: uppercase;
 }
+
 .stage__line {
   display: block;
-  white-space: nowrap; /* each headline line was sized to fit on one row */
+  white-space: nowrap;
+  /* each headline line was sized to fit on one row */
 }
+
 .stage__line--1 {
   color: var(--sage);
 }
+
 .stage__line--2 {
   color: var(--sage-light);
 }
@@ -108,7 +113,8 @@
   margin-bottom: -0.08em;
   vertical-align: top;
 }
-.w > span {
+
+.w>span {
   display: inline-block;
 }
 
@@ -123,20 +129,22 @@
 
 /* States: before (waiting below) → active → after (exited above). */
 .stage__body,
-.w > span {
+.w>span {
   transition:
     transform 0.75s var(--ease-out),
     opacity 0.6s var(--ease-out);
 }
 
-.is-before .w > span {
+.is-before .w>span {
   transform: translate3d(0, 115%, 0);
 }
-.is-after .w > span {
+
+.is-after .w>span {
   transform: translate3d(0, -115%, 0);
   transition-duration: 0.45s;
 }
-.is-active .w > span {
+
+.is-active .w>span {
   transform: none;
   transition-delay: calc(80ms + var(--i) * 38ms);
 }
@@ -145,11 +153,13 @@
   opacity: 0;
   transform: translate3d(0, 24px, 0);
 }
+
 .is-after .stage__body {
   opacity: 0;
   transform: translate3d(0, -24px, 0);
   transition-duration: 0.4s;
 }
+
 .is-active .stage__body {
   transition-delay: 260ms;
 }
@@ -180,10 +190,12 @@
   color: var(--muted);
   transition: opacity 0.4s, transform 0.4s;
 }
+
 .hero__cue.is-hidden {
   opacity: 0;
   transform: translateY(10px);
 }
+
 .hero__mouse {
   position: relative;
   width: 20px;
@@ -191,6 +203,7 @@
   border: 2px solid currentColor;
   border-radius: 12px;
 }
+
 .hero__mouse::after {
   content: '';
   position: absolute;
@@ -203,10 +216,22 @@
   background: currentColor;
   animation: cue 1.6s ease-in-out infinite;
 }
+
 @keyframes cue {
-  0% { transform: translateY(0); opacity: 1; }
-  70% { transform: translateY(9px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 0; }
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  70% {
+    transform: translateY(9px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 0;
+  }
 }
 
 /* ---------- tablet & mobile: video on top, text below ---------- */
@@ -214,12 +239,14 @@
   .hero {
     height: 540vh;
   }
+
   .hero__sticky {
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
     padding-top: var(--header-h);
   }
+
   .hero__media {
     position: relative;
     top: auto;
@@ -232,27 +259,33 @@
     mask-image: linear-gradient(to bottom, transparent 0, #000 8%, #000 88%, transparent 100%);
     -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 8%, #000 88%, transparent 100%);
   }
+
   .hero__content {
     align-items: stretch;
     width: auto;
     margin: 0;
     padding: 4px var(--gutter) 0;
   }
+
   .stage__title {
     font-size: clamp(2.5rem, 11.5vw, 4rem);
     margin-bottom: 12px;
   }
+
   .stage__body {
     font-size: 0.96rem;
     line-height: 1.55;
   }
+
   .hero__ctas {
     margin-top: 22px;
   }
+
   .hero__ctas {
     flex-wrap: nowrap;
     gap: 10px;
   }
+
   .hero__ctas .btn {
     flex: 1 1 0;
     min-width: 0;
@@ -260,6 +293,7 @@
     padding: 0 12px;
     font-size: 0.88rem;
   }
+
   .hero__leaves,
   .hero__cue {
     display: none;
@@ -273,16 +307,19 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .stage__body,
-  .w > span {
+  .w>span {
     transition: opacity 0.3s;
     transition-delay: 0s !important;
     transform: none !important;
   }
-  .is-before .w > span,
-  .is-after .w > span {
+
+  .is-before .w>span,
+  .is-after .w>span {
     opacity: 0;
   }
+
   .hero__mouse::after {
     animation: none;
   }

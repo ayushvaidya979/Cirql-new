@@ -155,7 +155,7 @@ export function Stage({ category, brand, age, condition, done }) {
   const origin = phone ? { x: 145, y: 118 } : { x: 70, y: 196 }
   const tagAt = phone ? { x: 282, y: 128 } : { x: 340, y: 206 }
   return (
-    <svg className="stage" viewBox="0 0 440 470" aria-hidden="true">
+    <svg className="story-stage" viewBox="0 0 440 470" aria-hidden="true">
       <path d="M70 140c30-80 150-120 250-90s120 110 110 190-50 170-160 180S40 360 40 260c0-50 12-80 30-120Z" fill="#e2f4d8" />
       <ellipse cx="220" cy="440" rx="160" ry="14" fill={MINT} />
 
@@ -359,7 +359,7 @@ function Cloud({ x, y, s = 1, cls }) {
 
 export function PickupStage({ phase, name }) {
   return (
-    <svg className="stage" viewBox="0 0 440 470" aria-hidden="true">
+    <svg className="story-stage" viewBox="0 0 440 470" aria-hidden="true">
       <path d="M70 140c30-80 150-120 250-90s120 110 110 190-50 170-160 180S40 360 40 260c0-50 12-80 30-120Z" fill="#e2f4d8" />
       <ellipse cx="220" cy="440" rx="200" ry="14" fill={MINT} />
 
