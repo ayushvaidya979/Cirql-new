@@ -1,11 +1,11 @@
-import { lazy, Suspense, useEffect } from 'react'
+import { lazy, Suspense } from 'react'
 import Header from './components/Header.jsx'
 import Hero from './components/Hero.jsx'
 import { Features, HowItWorks, Flow, Partners, Closing } from './components/Sections.jsx'
 import Journey from './components/Journey.jsx'
 import Rewards from './components/Rewards.jsx'
 import { useSession } from './lib/auth.js'
-import { usePath, navigate } from './router.jsx'
+import { usePath } from './router.jsx'
 
 // The valuation flow only loads when someone opens it.
 const SellPage = lazy(() => import('./pages/SellPage.jsx'))
@@ -32,22 +32,6 @@ function Home() {
 export default function App() {
   const path = usePath()
   const session = useSession()
-
-  useEffect(() => {
-    if (session || path.startsWith('/login') || path.startsWith('/signup')) return
-
-    const onClick = (event) => {
-      const button = event.target.closest('button')
-      if (!button) return
-      if (button.closest('[data-auth-allow="true"]')) return
-      event.preventDefault()
-      event.stopPropagation()
-      navigate('/login')
-    }
-
-    document.addEventListener('click', onClick, true)
-    return () => document.removeEventListener('click', onClick, true)
-  }, [session, path])
 
   const protectedRoute = path.startsWith('/sell') || path.startsWith('/partner')
   const authRoute = path.startsWith('/login') || path.startsWith('/signup')
