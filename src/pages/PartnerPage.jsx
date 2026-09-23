@@ -6,7 +6,7 @@ import { IntroScene, VerifyScene, RequestsScene, RouteScene, PayoutScene, GrowSc
 import './PartnerPage.css'
 
 const CHAPTERS = [
-  { Scene: VerifyScene, kicker: 'Chapter 1', title: 'Get verified', text: 'Share your CPCB / SPCB authorisation. Our team checks it and your facility goes live as a verified EcoBin partner.' },
+  { Scene: VerifyScene, kicker: 'Chapter 1', title: 'Get verified', text: 'Share your CPCB / SPCB authorisation. Our team checks it and your facility goes live as a verified Cirql partner.' },
   { Scene: RequestsScene, kicker: 'Chapter 2', title: 'Requests flow in', text: 'Households and offices near you list their old phones and laptops. Each request arrives identified by our AI and pre-valued.' },
   { Scene: RouteScene, kicker: 'Chapter 3', title: 'Pickups come to you', text: 'We match requests to your service area and plan the pickup route, so your team collects more devices in fewer trips.' },
   { Scene: PayoutScene, kicker: 'Chapter 4', title: 'Process & pay out', text: 'Log each device as you process it. Customers are paid instantly through the platform, with every transaction on record.' },
@@ -57,9 +57,9 @@ export default function PartnerPage() {
   const [status, setStatus] = useState('idle') // idle | sending | sent | error
 
   useEffect(() => {
-    document.title = 'Become a partner · EcoBin'
+    document.title = 'Become a partner · Cirql'
     return () => {
-      document.title = 'EcoBin · Sell & Recycle Your Old Electronics'
+      document.title = 'Cirql · Sell & Recycle Your Old Electronics'
     }
   }, [])
 
@@ -127,10 +127,10 @@ export default function PartnerPage() {
         <div className="pp-wrap pp-hero__grid">
           <div>
             <Link to="/" className="pp-back"><Icons.arrow width="16" height="16" /> Back to home</Link>
-            <p className="pp-kicker">EcoBin partner programme</p>
+            <p className="pp-kicker">Cirql partner programme</p>
             <h1><span>Grow your recycling</span> <span>business with us</span></h1>
             <p className="pp-lead">
-              Becoming an EcoBin partner means a steady stream of verified, pre-valued e-waste from your city, with pickups,
+              Becoming a Cirql partner means a steady stream of verified, pre-valued e-waste from your city, with pickups,
               payments and paperwork handled on one platform. Here’s the journey.
             </p>
             <div className="pp-actions">
@@ -173,7 +173,7 @@ export default function PartnerPage() {
       {/* ---------- benefits ---------- */}
       <section className="pp-benefits">
         <div className="pp-wrap">
-          <h2 className="pp-h2"><span>Why partners</span> <span>choose EcoBin</span></h2>
+          <h2 className="pp-h2"><span>Why partners</span> <span>choose Cirql</span></h2>
           <div className="pp-benefits__grid">
             {BENEFITS.map(([icon, t, d], i) => {
               const Icon = Icons[icon]

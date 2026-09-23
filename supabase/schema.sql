@@ -1,5 +1,5 @@
 -- =====================================================================
--- EcoBin backend schema. Safe to re-run: everything is idempotent.
+-- Cirql backend schema. Safe to re-run: everything is idempotent.
 -- Applied by ml/seed_supabase.py (or paste into the Supabase SQL editor).
 -- =====================================================================
 
@@ -211,3 +211,240 @@ grant insert (company, contact_name, phone, email, city, state, facility_type, a
 grant usage on sequence public.partner_enquiries_id_seq to anon, authenticated;
 drop policy if exists "anyone can send an enquiry" on public.partner_enquiries;
 create policy "anyone can send an enquiry" on public.partner_enquiries for insert to anon, authenticated with check (status = 'new');
+
+-- =====================================================================
+-- 4. Activity capture + admin portal (/admin)
+--    Visitors can only INSERT. Admins (confirmed emails in public.admins)
+--    can read everything and update statuses.
+-- =====================================================================
+
+create table if not exists public.admins (
+  email      text primary key check (email = lower(email)),
+  created_at timestamptz not null default now()
+);
+alter table public.admins enable row level security;
+revoke all on public.admins from anon, authenticated;
+
+-- True only for a logged-in user whose CONFIRMED email is on the admin list.
+create or replace function public.is_admin()
+returns boolean
+language sql
+stable
+security definer
+set search_path = public, auth
+as $$
+  select exists (
+    select 1 from auth.users u
+    join public.admins a on a.email = lower(u.email)
+    where u.id = auth.uid() and u.email_confirmed_at is not null
+  );
+$$;
+revoke all on function public.is_admin() from public;
+grant execute on function public.is_admin() to anon, authenticated;
+
+-- Completed valuations (the price screen was reached)
+create table if not exists public.valuations (
+  id            bigserial primary key,
+  created_at    timestamptz not null default now(),
+  user_id       uuid default auth.uid(),
+  category      text check (category in ('phone', 'laptop')),
+  brand         text check (char_length(brand) <= 60),
+  model         text check (char_length(model) <= 120),
+  age           text check (char_length(age) <= 40),
+  condition     text check (char_length(condition) <= 40),
+  price         int check (price between 0 and 10000000),
+  scanned       boolean not null default false,
+  referral_code text check (char_length(referral_code) <= 20)
+);
+
+-- Pickup requests: the real leads
+create table if not exists public.pickup_requests (
+  id            bigserial primary key,
+  created_at    timestamptz not null default now(),
+  user_id       uuid default auth.uid(),
+  name          text not null check (char_length(name) between 2 and 120),
+  phone         text not null check (phone ~ '^[0-9 +()-]{7,20}$'),
+  address       text not null check (char_length(address) between 5 and 500),
+  pincode       text check (pincode ~ '^[1-9][0-9]{5}$'),
+  device        text check (char_length(device) <= 200),
+  price         int check (price between 0 and 10000000),
+  recycler      text check (char_length(recycler) <= 200),
+  latitude      double precision check (latitude between -90 and 90),
+  longitude     double precision check (longitude between -180 and 180),
+  referral_code text check (char_length(referral_code) <= 20),
+  status        text not null default 'new' check (status in ('new', 'scheduled', 'collected', 'cancelled'))
+);
+
+-- Referral codes handed out, and what happened with them
+create table if not exists public.referral_codes (
+  code       text primary key check (code ~ '^CIRQL-[A-Z0-9]{4,8}$'),
+  created_at timestamptz not null default now(),
+  user_id    uuid default auth.uid()
+);
+create table if not exists public.referral_events (
+  id         bigserial primary key,
+  created_at timestamptz not null default now(),
+  code       text not null check (code ~ '^CIRQL-[A-Z0-9]{4,8}$'),
+  event      text not null check (event in ('visit', 'signup', 'valuation', 'pickup')),
+  user_id    uuid default auth.uid()
+);
+
+-- EcoPoints claims and redemptions
+create table if not exists public.reward_events (
+  id         bigserial primary key,
+  created_at timestamptz not null default now(),
+  user_id    uuid default auth.uid(),
+  kind       text not null check (kind in ('claim', 'redeem')),
+  reward     text not null check (char_length(reward) <= 80),
+  points     int not null check (points between -100000 and 100000)
+);
+
+alter table public.valuations enable row level security;
+alter table public.pickup_requests enable row level security;
+alter table public.referral_codes enable row level security;
+alter table public.referral_events enable row level security;
+alter table public.reward_events enable row level security;
+
+revoke all on public.valuations, public.pickup_requests, public.referral_codes, public.referral_events, public.reward_events from anon, authenticated;
+
+-- Visitors: insert only, and never choose user_id / status themselves
+grant insert (category, brand, model, age, condition, price, scanned, referral_code) on public.valuations to anon, authenticated;
+grant insert (name, phone, address, pincode, device, price, recycler, latitude, longitude, referral_code) on public.pickup_requests to anon, authenticated;
+grant insert (code) on public.referral_codes to anon, authenticated;
+grant insert (code, event) on public.referral_events to anon, authenticated;
+grant insert (kind, reward, points) on public.reward_events to anon, authenticated;
+grant usage on sequence public.valuations_id_seq, public.pickup_requests_id_seq, public.referral_events_id_seq, public.reward_events_id_seq to anon, authenticated;
+
+drop policy if exists "visitors insert" on public.valuations;
+create policy "visitors insert" on public.valuations for insert to anon, authenticated with check (true);
+drop policy if exists "visitors insert" on public.pickup_requests;
+create policy "visitors insert" on public.pickup_requests for insert to anon, authenticated with check (status = 'new');
+drop policy if exists "visitors insert" on public.referral_codes;
+create policy "visitors insert" on public.referral_codes for insert to anon, authenticated with check (true);
+drop policy if exists "visitors insert" on public.referral_events;
+create policy "visitors insert" on public.referral_events for insert to anon, authenticated with check (true);
+drop policy if exists "visitors insert" on public.reward_events;
+create policy "visitors insert" on public.reward_events for insert to anon, authenticated with check (true);
+
+-- Admins: read everything, update statuses. (Grants are for the role; RLS limits rows to admins.)
+grant select on public.partner_enquiries, public.valuations, public.pickup_requests, public.referral_codes,
+  public.referral_events, public.reward_events, public.device_scans, public.recyclers to authenticated;
+grant update (status) on public.partner_enquiries, public.pickup_requests to authenticated;
+
+do $$
+declare t text;
+begin
+  foreach t in array array['partner_enquiries', 'valuations', 'pickup_requests', 'referral_codes', 'referral_events', 'reward_events', 'device_scans', 'recyclers'] loop
+    execute format('drop policy if exists "admins read" on public.%I', t);
+    execute format('create policy "admins read" on public.%I for select to authenticated using (public.is_admin())', t);
+  end loop;
+  foreach t in array array['partner_enquiries', 'pickup_requests'] loop
+    execute format('drop policy if exists "admins update status" on public.%I', t);
+    execute format('create policy "admins update status" on public.%I for update to authenticated using (public.is_admin()) with check (public.is_admin())', t);
+  end loop;
+end $$;
+
+-- Registered users (from Supabase Auth), for admins only
+create or replace function public.admin_users()
+returns table (id uuid, email text, full_name text, referred_by text, created_at timestamptz, last_sign_in_at timestamptz, confirmed boolean)
+language plpgsql
+stable
+security definer
+set search_path = public, auth
+as $$
+begin
+  if not public.is_admin() then raise exception 'not authorised' using errcode = '42501'; end if;
+  return query
+    select u.id, u.email::text, (u.raw_user_meta_data ->> 'full_name')::text, (u.raw_user_meta_data ->> 'referred_by')::text,
+           u.created_at, u.last_sign_in_at, u.email_confirmed_at is not null
+    from auth.users u
+    order by u.created_at desc;
+end;
+$$;
+revoke all on function public.admin_users() from public;
+grant execute on function public.admin_users() to authenticated;
+
+-- Referral leaderboard: one row per code with its funnel
+create or replace function public.admin_referrals()
+returns table (code text, created_at timestamptz, owner_email text, visits bigint, signups bigint, valuations bigint, pickups bigint)
+language plpgsql
+stable
+security definer
+set search_path = public, auth
+as $$
+begin
+  if not public.is_admin() then raise exception 'not authorised' using errcode = '42501'; end if;
+  return query
+    with codes as (
+      select c.code, c.created_at, c.user_id from referral_codes c
+      union all
+      select e.code, min(e.created_at), null::uuid from referral_events e
+      where not exists (select 1 from referral_codes c2 where c2.code = e.code)
+      group by e.code
+    )
+    select c.code, min(c.created_at), max(u.email)::text,
+      count(e.*) filter (where e.event = 'visit'),
+      count(e.*) filter (where e.event = 'signup'),
+      count(e.*) filter (where e.event = 'valuation'),
+      count(e.*) filter (where e.event = 'pickup')
+    from codes c
+    left join referral_events e on e.code = c.code
+    left join auth.users u on u.id = c.user_id
+    group by c.code
+    order by count(e.*) filter (where e.event = 'pickup') desc, count(e.*) desc, min(c.created_at) desc;
+end;
+$$;
+revoke all on function public.admin_referrals() from public;
+grant execute on function public.admin_referrals() to authenticated;
+
+-- Dashboard numbers + a 14-day daily series per activity
+create or replace function public.admin_overview()
+returns json
+language plpgsql
+stable
+security definer
+set search_path = public, auth
+as $$
+declare result json;
+begin
+  if not public.is_admin() then raise exception 'not authorised' using errcode = '42501'; end if;
+  with days as (select generate_series(current_date - 13, current_date, interval '1 day')::date as d),
+  series as (
+    select d,
+      (select count(*) from partner_enquiries where created_at::date = d) as enquiries,
+      (select count(*) from pickup_requests where created_at::date = d) as pickups,
+      (select count(*) from valuations where created_at::date = d) as valuations,
+      (select count(*) from device_scans where created_at::date = d) as scans,
+      (select count(*) from auth.users where created_at::date = d) as signups
+    from days
+  )
+  select json_build_object(
+    'totals', json_build_object(
+      'enquiries', (select count(*) from partner_enquiries),
+      'enquiries_new', (select count(*) from partner_enquiries where status = 'new'),
+      'pickups', (select count(*) from pickup_requests),
+      'pickups_new', (select count(*) from pickup_requests where status = 'new'),
+      'pickup_value', (select coalesce(sum(price), 0) from pickup_requests where status <> 'cancelled'),
+      'valuations', (select count(*) from valuations),
+      'scans', (select count(*) from device_scans),
+      'users', (select count(*) from auth.users),
+      'users_7d', (select count(*) from auth.users where created_at > now() - interval '7 days'),
+      'referral_codes', (select count(*) from referral_codes),
+      'referral_visits', (select count(*) from referral_events where event = 'visit'),
+      'rewards_claimed', (select count(*) from reward_events where kind = 'claim'),
+      'rewards_redeemed', (select count(*) from reward_events where kind = 'redeem'),
+      'recyclers', (select count(*) from recyclers),
+      'recyclers_eligible', (select count(*) from eligible_recyclers)
+    ),
+    'series', (select json_agg(json_build_object('day', d, 'enquiries', enquiries, 'pickups', pickups, 'valuations', valuations, 'scans', scans, 'signups', signups) order by d) from series),
+    'top_devices', (select coalesce(json_agg(t), '[]'::json) from (
+      select m.model, count(*) as scans from device_scans s join device_models m on m.id = s.model_id
+      group by m.model order by count(*) desc limit 5) t)
+  ) into result;
+  return result;
+end;
+$$;
+revoke all on function public.admin_overview() from public;
+grant execute on function public.admin_overview() to authenticated;
+
+insert into public.admins (email) values ('ayushvaidya979@gmail.com') on conflict do nothing;

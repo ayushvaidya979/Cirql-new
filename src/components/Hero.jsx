@@ -298,7 +298,7 @@ export default function Hero() {
   return (
     <section ref={sectionRef} className="hero" aria-label="How it works">
       <div ref={stickyRef} className="hero__sticky">
-        <h1 className="sr-only">EcoBin: sell and recycle your old electronics with free doorstep pickup</h1>
+        <h1 className="sr-only">Cirql: sell and recycle your old electronics with free doorstep pickup</h1>
 
         <div className="hero__media" aria-hidden="true">
           <canvas ref={canvasRef} className="hero__canvas" />

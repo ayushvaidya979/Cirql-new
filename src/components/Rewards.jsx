@@ -13,7 +13,7 @@ const REFERRAL_POINTS = 100
 const store = {
   get(key, fallback) {
     try {
-      const v = localStorage.getItem(`ecobin:${key}`)
+      const v = localStorage.getItem(`cirql:${key}`)
       return v == null ? fallback : JSON.parse(v)
     } catch {
       return fallback
@@ -21,7 +21,7 @@ const store = {
   },
   set(key, value) {
     try {
-      localStorage.setItem(`ecobin:${key}`, JSON.stringify(value))
+      localStorage.setItem(`cirql:${key}`, JSON.stringify(value))
     } catch {
       /* storage blocked: keep it in memory */
     }
@@ -191,7 +191,7 @@ export default function Rewards() {
   const [code] = useState(() => {
     const saved = store.get('refCode', null)
     if (saved) return saved
-    const c = `ECO-${makeCode()}`
+    const c = `CIRQL-${makeCode()}`
     store.set('refCode', c)
     return c
   })
@@ -222,7 +222,7 @@ export default function Rewards() {
   }
 
   const link = `${window.location.origin}/?ref=${code}`
-  const message = `I recycle my old gadgets with EcoBin and get paid for them. Use my code ${code} and we both get ${REFERRAL_POINTS} EcoPoints: ${link}`
+  const message = `I recycle my old gadgets with Cirql and get paid for them. Use my code ${code} and we both get ${REFERRAL_POINTS} EcoPoints: ${link}`
 
   const copy = async () => {
     try {
@@ -237,7 +237,7 @@ export default function Rewards() {
   const share = async () => {
     if (navigator.share) {
       try {
-        await navigator.share({ title: 'EcoBin', text: message, url: link })
+        await navigator.share({ title: 'Cirql', text: message, url: link })
         return
       } catch {
         /* cancelled */

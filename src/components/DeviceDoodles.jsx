@@ -245,7 +245,7 @@ function Van() {
       {/* livery */}
       <path d="M4 82h199v14H4Z" fill={GREEN} />
       <path d="M4 76h199v5H4Z" fill={LEAF} />
-      <text x="99" y="93" textAnchor="middle" fontFamily="Oswald, sans-serif" fontWeight="600" fontSize="10" letterSpacing="2" fill="#fff">ECOBIN</text>
+      <text x="99" y="93" textAnchor="middle" fontFamily="Oswald, sans-serif" fontWeight="600" fontSize="10" letterSpacing="2" fill="#fff">CIRQL</text>
       <circle cx="72" cy="42" r="24" fill={SOFT_GREEN} />
       <path d="M62 36a12 12 0 0 1 21-3M82 48a12 12 0 0 1-21 3M84 26v8h-8M60 58v-8h8" stroke={GREEN} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" fill="none" />
       <path d="m112 22-7 13h7l-3 11 10-15h-7l3-9Z" fill={GOLD} />

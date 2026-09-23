@@ -1,4 +1,4 @@
-"""Load catalogue, embeddings and recyclers through the temporary _ecobin_seed()
+"""Load catalogue, embeddings and recyclers through the temporary _cirql_seed()
 database function (used when there is no direct database connection).
 
     python ml/seed_via_rpc.py --excel "/path/Recyclers.xlsx" --token <one-time token>
@@ -20,7 +20,7 @@ from seed_supabase import RUNS, env, load_recyclers
 def call(url, key, token, kind, payload):
     body = json.dumps({"token": token, "kind": kind, "payload": payload}, default=str).encode()
     req = urllib.request.Request(
-        f"{url}/rest/v1/rpc/_ecobin_seed",
+        f"{url}/rest/v1/rpc/_cirql_seed",
         data=body,
         headers={"apikey": key, "Authorization": f"Bearer {key}", "Content-Type": "application/json"},
     )

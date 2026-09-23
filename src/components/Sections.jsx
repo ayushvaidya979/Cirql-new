@@ -103,7 +103,7 @@ export function Features() {
           center
           a="Everything your"
           b="e-waste needs"
-          sub="From a single photo to cash in your account, EcoBin handles every step of recycling your old electronics."
+          sub="From a single photo to cash in your account, Cirql handles every step of recycling your old electronics."
         />
         <div className="features">
           {FEATURES.map((f, i) => {
@@ -193,7 +193,7 @@ export function Flow() {
           center
           a="Closing the loop"
           b="on e-waste"
-          sub="EcoBin connects people, devices and authorised recyclers, so old electronics become raw materials for new ones and real value for you."
+          sub="Cirql connects people, devices and authorised recyclers, so old electronics become raw materials for new ones and real value for you."
         />
         <div className="flow">
           {FLOW.map(({ Art, title, text }, i) => (
@@ -247,7 +247,7 @@ export function Partners() {
       <DotGrid className="deco deco--tr" color="rgba(255,255,255,.18)" />
       <div className="container split">
         <div className="split__text">
-          <Heading light a="For recyclers:" b="grow with EcoBin" sub="A dedicated partner portal brings you a steady stream of sorted, pre-valued e-waste, and the tools to handle it." />
+          <Heading light a="For recyclers:" b="grow with Cirql" sub="A dedicated partner portal brings you a steady stream of sorted, pre-valued e-waste, and the tools to handle it." />
           <div className="partner-grid">
             {PARTNER.map(([ic, t, d], i) => {
               const Icon = Icons[ic]
@@ -295,14 +295,14 @@ export function Closing() {
       </Section>
       <footer className="footer">
         <div className="container footer__inner">
-          <span className="footer__brand">EcoBin</span>
+          <span className="footer__brand">Cirql</span>
           <nav>
             <a href="#features">Features</a>
             <a href="#how-it-works">How it works</a>
             <a href="#how-we-work">How we work</a>
             <a href="#partners">Partners</a>
           </nav>
-          <span className="footer__copy">© {new Date().getFullYear()} EcoBin. Recycle responsibly.</span>
+          <span className="footer__copy">© {new Date().getFullYear()} Cirql. Recycle responsibly.</span>
         </div>
       </footer>
     </>

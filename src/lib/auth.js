@@ -6,7 +6,7 @@ import { useSyncExternalStore } from 'react'
 
 const URL = import.meta.env.VITE_SUPABASE_URL
 const KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
-const STORE = 'ecobin:session'
+const STORE = 'cirql:session'
 const listeners = new Set()
 
 let session = read()

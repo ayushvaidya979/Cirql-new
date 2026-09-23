@@ -1,4 +1,4 @@
-# EcoBin backend: device recognition + recyclers
+# Cirql backend: device recognition + recyclers
 
 ## How it works
 
@@ -38,8 +38,8 @@ python seed_supabase.py --excel "/path/to/SIH_2026_EWaste_Recycler_Dataset.xlsx"
 ```
 
 No database password? That's how it was first seeded (2026-09-22): run `supabase/schema.sql`
-in the SQL editor, create a temporary token-guarded `_ecobin_seed()` function, run
-`python seed_via_rpc.py --excel ... --token ...`, then `drop function public._ecobin_seed(text, text, jsonb);`.
+in the SQL editor, create a temporary token-guarded `_cirql_seed()` function, run
+`python seed_via_rpc.py --excel ... --token ...`, then `drop function public._cirql_seed(text, text, jsonb);`.
 
 Adding a new device model: add a folder of photos, add its display name to
 `catalog.py`, then run the three commands above.

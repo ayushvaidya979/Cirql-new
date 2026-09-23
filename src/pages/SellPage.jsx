@@ -47,9 +47,9 @@ export default function SellPage() {
   const [pickup, setPickup] = useState(null) // null | { phase, match }
 
   useEffect(() => {
-    document.title = 'Check your device value · EcoBin'
+    document.title = 'Check your device value · Cirql'
     return () => {
-      document.title = 'EcoBin · Sell & Recycle Your Old Electronics'
+      document.title = 'Cirql · Sell & Recycle Your Old Electronics'
       clearTimeout(timer.current)
     }
   }, [])

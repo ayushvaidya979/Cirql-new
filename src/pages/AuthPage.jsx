@@ -39,9 +39,9 @@ export default function AuthPage({ mode: initial = 'login' }) {
 
   useEffect(() => setMode(initial), [initial])
   useEffect(() => {
-    document.title = `${mode === 'signup' ? 'Sign up' : 'Log in'} · EcoBin`
+    document.title = `${mode === 'signup' ? 'Sign up' : 'Log in'} · Cirql`
     return () => {
-      document.title = 'EcoBin · Sell & Recycle Your Old Electronics'
+      document.title = 'Cirql · Sell & Recycle Your Old Electronics'
     }
   }, [mode])
 
@@ -106,7 +106,7 @@ export default function AuthPage({ mode: initial = 'login' }) {
                 <button type="button" role="tab" aria-selected={mode === 'login'} className={mode === 'login' ? 'is-on' : ''} onClick={() => switchTo('login')}>Log in</button>
                 <button type="button" role="tab" aria-selected={mode === 'signup'} className={mode === 'signup' ? 'is-on' : ''} onClick={() => switchTo('signup')}>Sign up</button>
               </div>
-              <h1>{mode === 'signup' ? 'Create your account' : 'Log in to EcoBin'}</h1>
+              <h1>{mode === 'signup' ? 'Create your account' : 'Log in to Cirql'}</h1>
               <form className="auth__form" onSubmit={submit} noValidate key={mode}>
                 {mode === 'signup' && (
                   <label>
@@ -129,7 +129,7 @@ export default function AuthPage({ mode: initial = 'login' }) {
                 </button>
               </form>
               <p className="auth__switch">
-                {mode === 'signup' ? 'Already have an account? ' : 'New to EcoBin? '}
+                {mode === 'signup' ? 'Already have an account? ' : 'New to Cirql? '}
                 <button type="button" onClick={() => switchTo(mode === 'signup' ? 'login' : 'signup')}>
                   {mode === 'signup' ? 'Log in' : 'Create an account'}
                 </button>
