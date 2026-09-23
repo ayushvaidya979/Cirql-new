@@ -18,10 +18,7 @@ export default function Header() {
   return (
     <header className={`header ${open ? 'is-open' : ''}`}>
       <Link className="logo" to="/" aria-label="Cirql home">
-        <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
-          <path d="M20 3C9 3 4 8.5 4 15c0 2 .6 3.8 1.5 5 1-5 4.5-9 9.5-11-4 3-6.6 6.6-7.6 11.3 1 .5 2.2.7 3.6.7C18 21 21 13 20 3Z" fill="#1e9e57" />
-        </svg>
-        Cirql
+        <img src="/logo.png" alt="CIRQL" className="logo__img" />
       </Link>
 
       <nav className="nav" id="site-nav">
