@@ -293,34 +293,20 @@ export function Partners() {
 /* ============================ 8. CTA + footer ============================ */
 export function Closing() {
   return (
-    <>
-      <Section className="cta-wrap" id="contact">
-        <div className="container">
-          <div className="cta" data-reveal>
-            <Leaf className="cta__leaf cta__leaf--1" color="rgba(255,255,255,.25)" vein="rgba(255,255,255,.4)" size={90} rotate={-20} />
-            <Leaf className="cta__leaf cta__leaf--2" color="rgba(255,255,255,.18)" vein="rgba(255,255,255,.35)" size={60} rotate={40} />
-            <div>
-              <h2>Ready to turn e-waste into value?</h2>
-              <p>Upload a photo of your old device and get an instant estimate.</p>
-            </div>
-            <Link className="btn btn--light" to="/sell" requireAuth onClick={(e) => { if (!session) { e.preventDefault(); navigate('/login') } }}>
-              Get my estimate <Icons.arrow width="18" height="18" />
-            </Link>
+    <Section className="cta-wrap" id="contact">
+      <div className="container">
+        <div className="cta" data-reveal>
+          <Leaf className="cta__leaf cta__leaf--1" color="rgba(255,255,255,.25)" vein="rgba(255,255,255,.4)" size={90} rotate={-20} />
+          <Leaf className="cta__leaf cta__leaf--2" color="rgba(255,255,255,.18)" vein="rgba(255,255,255,.35)" size={60} rotate={40} />
+          <div>
+            <h2>Ready to recycle smarter?</h2>
+            <p>Turn your unused electronics into value and help keep e-waste out of landfills.</p>
           </div>
+          <Link className="btn btn--light" to="/sell" requireAuth onClick={(e) => { if (!session) { e.preventDefault(); navigate('/login') } }}>
+            Start Recycling <Icons.arrow width="18" height="18" />
+          </Link>
         </div>
-      </Section>
-      <footer className="footer">
-        <div className="container footer__inner">
-          <span className="footer__brand">Cirql</span>
-          <nav>
-            <a href="#features">Features</a>
-            <a href="#how-it-works">How it works</a>
-            <a href="#how-we-work">How we work</a>
-            <a href="#partners">Partners</a>
-          </nav>
-          <span className="footer__copy">© {new Date().getFullYear()} Cirql. Recycle responsibly.</span>
-        </div>
-      </footer>
-    </>
+      </div>
+    </Section>
   )
 }

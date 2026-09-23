@@ -4,6 +4,7 @@ import Hero from './components/Hero.jsx'
 import { Features, HowItWorks, Flow, Partners, Closing } from './components/Sections.jsx'
 import Journey from './components/Journey.jsx'
 import Rewards from './components/Rewards.jsx'
+import Footer from './components/Footer.jsx'
 import { useSession } from './lib/auth.js'
 import { usePath } from './router.jsx'
 
@@ -25,6 +26,7 @@ function Home() {
         <Partners />
       </main>
       <Closing />
+      <Footer />
     </>
   )
 }
