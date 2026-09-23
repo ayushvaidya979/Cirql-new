@@ -33,7 +33,7 @@ function AuthDoodle() {
 export default function AuthPage({ mode: initial = 'login' }) {
   const session = useSession()
   const [mode, setMode] = useState(initial)
-  const [form, setForm] = useState({ name: '', email: '', password: '' })
+  const [form, setForm] = useState({ name: '', email: '', password: '', referralCode: '' })
   const [status, setStatus] = useState('idle') // idle | busy | confirm
   const [error, setError] = useState('')
 
@@ -123,6 +123,12 @@ export default function AuthPage({ mode: initial = 'login' }) {
                   <input type="password" value={form.password} onChange={set('password')}
                     autoComplete={mode === 'signup' ? 'new-password' : 'current-password'} minLength={6} maxLength={72} />
                 </label>
+                {mode === 'signup' && (
+                  <label>
+                    <span>Referral code (optional)</span>
+                    <input value={form.referralCode} onChange={set('referralCode')} autoComplete="off" maxLength={40} placeholder="Enter referral code" />
+                  </label>
+                )}
                 {error && <p className="auth__error" role="alert">{error}</p>}
                 <button type="submit" className="btn btn--primary auth__submit" disabled={status === 'busy' || !hasSupabase}>
                   {status === 'busy' ? 'Please wait…' : mode === 'signup' ? 'Create account' : 'Log in'}
