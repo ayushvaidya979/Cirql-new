@@ -11,7 +11,7 @@ const PLATFORM_LINKS = [
 ]
 
 const COMPANY_LINKS = [
-  { label: 'About CIRQL', to: '/', disabled: false },
+  { label: 'About Us', to: '/about', disabled: false },
   { label: 'How It Works', to: '/#how-it-works', disabled: false },
   { label: 'Contact Us', to: '/#contact', disabled: false },
   { label: 'FAQs', to: '/#features', disabled: false },

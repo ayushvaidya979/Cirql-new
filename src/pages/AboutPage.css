@@ -1,0 +1,432 @@
+/* Styles for About Us Page — Clean theme matching without doodles */
+
+.about-page {
+  background: var(--bg);
+  min-height: 100vh;
+  color: var(--ink);
+}
+
+.about-wrap {
+  width: min(1200px, 100% - 2 * var(--gutter));
+  margin: 0 auto;
+}
+
+/* ---------- Typography & Utility ---------- */
+.about-kicker {
+  display: inline-block;
+  margin: 0 0 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sage);
+}
+
+.about-h1,
+.about-h2 {
+  margin: 0 0 16px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.05;
+  text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+}
+
+.about-h1 {
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+}
+
+.about-h2 {
+  font-size: clamp(2rem, 3.8vw, 3.2rem);
+}
+
+.about-h1 span:first-child,
+.about-h2 span:first-child {
+  color: var(--sage);
+}
+
+.about-h1 span:last-child,
+.about-h2 span:last-child {
+  color: var(--sage-light);
+}
+
+.about-lead {
+  margin: 0;
+  max-width: 62ch;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+/* ---------- Hero ---------- */
+.about-hero {
+  position: relative;
+  padding: calc(var(--header-h) + 24px) 0 70px;
+  border-bottom: 1px solid rgba(19, 36, 26, 0.08);
+}
+
+.about-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--muted);
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.about-back:hover {
+  color: var(--sage);
+  transform: translateX(-3px);
+}
+
+.about-hero__header {
+  max-width: 860px;
+}
+
+.about-hero__overview {
+  background: #ffffff;
+  border: 1px solid rgba(30, 158, 87, 0.2);
+  border-radius: 18px;
+  padding: 26px 30px;
+  margin: 28px 0 32px;
+  box-shadow: 0 6px 24px rgba(19, 36, 26, 0.04);
+}
+
+.about-overview__lead {
+  margin: 0 0 14px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.about-overview__lead strong {
+  color: var(--sage);
+}
+
+.about-overview__body {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.about-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+/* ---------- What CIRQL Offers ---------- */
+.about-offers {
+  padding: 80px 0 90px;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(19, 36, 26, 0.08);
+}
+
+.about-section-heading {
+  margin-bottom: 48px;
+}
+
+.about-offers__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.about-offer-card {
+  position: relative;
+  background: var(--bg);
+  border: 1px solid rgba(19, 36, 26, 0.08);
+  border-radius: 18px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out), border-color 0.25s;
+}
+
+.about-offer-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(19, 36, 26, 0.06);
+  border-color: var(--sage);
+}
+
+.about-offer-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.about-offer-card__step {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--sage);
+  letter-spacing: 0.04em;
+}
+
+.about-offer-card__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(30, 158, 87, 0.1);
+  color: var(--sage);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-offer-card__title {
+  margin: 0 0 10px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+.about-offer-card__desc {
+  margin: 0 0 20px;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--muted);
+  flex-grow: 1;
+}
+
+.about-offer-card__footer {
+  margin-top: auto;
+}
+
+.about-offer-card__tag {
+  display: inline-block;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(30, 158, 87, 0.08);
+  color: var(--leaf-dark);
+}
+
+/* ---------- The Journey Timeline ---------- */
+.about-journey {
+  padding: 85px 0 95px;
+  background: var(--bg);
+}
+
+.about-journey__timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.about-journey__item {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 24px;
+  position: relative;
+}
+
+.about-journey__marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.about-journey__dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 4px solid var(--sage);
+  box-shadow: 0 0 0 4px rgba(30, 158, 87, 0.15);
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.about-journey__line {
+  width: 2px;
+  background: rgba(30, 158, 87, 0.25);
+  flex-grow: 1;
+  min-height: 60px;
+  margin: 6px 0;
+}
+
+.about-journey__content {
+  background: #ffffff;
+  border: 1px solid rgba(19, 36, 26, 0.08);
+  border-radius: 18px;
+  padding: 24px 28px;
+  margin-bottom: 28px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.about-journey__content:hover {
+  border-color: var(--sage);
+  transform: translateX(4px);
+}
+
+.about-journey__phase {
+  display: inline-block;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 6px;
+}
+
+.about-journey__title {
+  margin: 0 0 10px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.35;
+}
+
+.about-journey__description {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+/* ---------- Values & Environmental Commitment ---------- */
+.about-values {
+  padding: 40px 0 80px;
+}
+
+.about-values__card {
+  background: linear-gradient(135deg, #10251b 0%, #173b2a 100%);
+  border-radius: 24px;
+  padding: 50px clamp(24px, 5vw, 60px);
+  color: #ffffff;
+  box-shadow: 0 16px 40px rgba(16, 37, 27, 0.2);
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: clamp(24px, 4vw, 56px);
+  align-items: center;
+}
+
+.about-values__heading {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+  text-transform: uppercase;
+  margin: 0 0 16px;
+  line-height: 1.1;
+  color: #ffffff;
+}
+
+.about-values__text p {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: #d6e5d9;
+}
+
+.about-values__stats {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.about-val-stat {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+
+.about-val-stat__num {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #6fcf4e;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.about-val-stat__label {
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: #e4eee6;
+}
+
+/* ---------- CTA Section ---------- */
+.about-cta-section {
+  padding: 0 0 80px;
+}
+
+.about-cta-card {
+  background: #ffffff;
+  border: 1px solid rgba(30, 158, 87, 0.2);
+  border-radius: 24px;
+  padding: 50px 32px;
+  text-align: center;
+  box-shadow: 0 12px 36px rgba(19, 36, 26, 0.05);
+}
+
+.about-cta-card h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.6vw, 2.8rem);
+  text-transform: uppercase;
+  margin: 0 0 12px;
+  color: var(--ink);
+}
+
+.about-cta-card p {
+  max-width: 56ch;
+  margin: 0 auto 28px;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.about-cta-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 960px) {
+  .about-offers__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .about-values__card {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .about-offers__grid {
+    grid-template-columns: 1fr;
+  }
+  .about-journey__item {
+    grid-template-columns: 36px 1fr;
+    gap: 14px;
+  }
+  .about-journey__content {
+    padding: 18px 20px;
+  }
+  .about-hero__actions,
+  .about-cta-card__actions {
+    flex-direction: column;
+  }
+  .about-hero__actions .btn,
+  .about-cta-card__actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

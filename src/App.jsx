@@ -12,6 +12,7 @@ import { usePath } from './router.jsx'
 const SellPage = lazy(() => import('./pages/SellPage.jsx'))
 const PartnerPage = lazy(() => import('./pages/PartnerPage.jsx'))
 const AuthPage = lazy(() => import('./pages/AuthPage.jsx'))
+const AboutPage = lazy(() => import('./pages/AboutPage.jsx'))
 
 function Home() {
   return (
@@ -48,6 +49,8 @@ export default function App() {
           <SellPage />
         ) : path.startsWith('/partner') ? (
           <PartnerPage />
+        ) : path.startsWith('/about') ? (
+          <AboutPage />
         ) : authRoute ? (
           <AuthPage mode={path.startsWith('/signup') ? 'signup' : 'login'} />
         ) : (

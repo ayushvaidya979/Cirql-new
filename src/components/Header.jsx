@@ -9,6 +9,7 @@ const LINKS = [
   ['How we work', '/#how-we-work'],
   ['Rewards', '/#rewards'],
   ['Partners', '/#partners'],
+  ['About Us', '/about'],
 ]
 
 export default function Header() {
