@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react'
+import { useSession } from './lib/auth.js'
 
 /* Prevent the browser from auto-restoring a mid-hero scroll position
    when the user presses the back button. We always want to start at the top. */
@@ -25,11 +26,19 @@ export function navigate(to) {
   window.scrollTo(0, 0)
 }
 
-export function Link({ to, onClick, ...props }) {
+export function Link({ to, onClick, requireAuth = false, authFallback = '/login', ...props }) {
+  const session = useSession()
+
   return (
     <a
       href={to}
       onClick={(e) => {
+        if (requireAuth && !session) {
+          e.preventDefault()
+          navigate(authFallback)
+          return
+        }
+
         onClick?.(e)
         if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
         e.preventDefault()

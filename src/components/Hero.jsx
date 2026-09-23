@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { Link } from '../router.jsx'
+import { useSession } from '../lib/auth.js'
 import './Hero.css'
 
 /* ------------------------------------------------------------------ *
@@ -100,6 +101,7 @@ export default function Hero() {
   const canvasRef = useRef(null)
   const leavesRef = useRef(null)
   const stickyRef = useRef(null)
+  const session = useSession()
   const [stage, setStage] = useState(0)
   const [scrolled, setScrolled] = useState(false)
 
@@ -343,7 +345,7 @@ export default function Hero() {
             <a className="btn btn--primary" href="#how-it-works" onClick={goToNext}>
               Check device value
             </a>
-            <Link className="btn btn--ghost" to="/partner">Become a partner</Link>
+            <Link className="btn btn--ghost" to="/partner" requireAuth onClick={(e) => { if (!session) { e.preventDefault(); navigate('/login') } }}>Become a partner</Link>
           </div>
         </div>
 

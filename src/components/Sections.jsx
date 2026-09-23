@@ -5,6 +5,7 @@ import {
 } from './Doodles.jsx'
 import { useEffect, useRef, useState } from 'react'
 import { Link, navigate } from '../router.jsx'
+import { useSession } from '../lib/auth.js'
 import CameraScan from './CameraScan.jsx'
 import { SCAN_HANDOFF_KEY } from '../lib/scanHandoff.js'
 import './Sections.css'
@@ -133,6 +134,7 @@ const STEPS = [
 
 export function HowItWorks() {
   const [scanning, setScanning] = useState(false)
+  const session = useSession()
   // Hand the result to the valuation page, which starts at the age question.
   const toPrice = (m) => {
     try {
@@ -142,6 +144,14 @@ export function HowItWorks() {
     }
     setScanning(false)
     navigate('/sell')
+  }
+
+  const handleProtectedNavigate = (to) => {
+    if (!session) {
+      navigate('/login')
+      return
+    }
+    navigate(to)
   }
   return (
     <Section className="section section--tint section--cover" id="how-it-works">
@@ -164,8 +174,14 @@ export function HowItWorks() {
             ))}
           </ol>
           <div className="actions" data-reveal>
-            <Link className="btn btn--primary" to="/sell">Select a device</Link>
-            <button type="button" className="btn btn--ghost" onClick={() => setScanning(true)}>
+            <Link className="btn btn--primary" to="/sell" requireAuth onClick={(e) => { if (!session) { e.preventDefault(); navigate('/login') } }}>Select a device</Link>
+            <button type="button" className="btn btn--ghost" onClick={() => {
+              if (!session) {
+                navigate('/login')
+                return
+              }
+              setScanning(true)
+            }}>
               <Icons.scan width="18" height="18" /> Scan device
             </button>
           </div>
@@ -263,7 +279,7 @@ export function Partners() {
             })}
           </div>
           <div className="actions" data-reveal>
-            <Link className="btn btn--light" to="/partner">Become a partner</Link>
+            <Link className="btn btn--light" to="/partner" requireAuth onClick={(e) => { if (!session) { e.preventDefault(); navigate('/login') } }}>Become a partner</Link>
           </div>
         </div>
         <div className="split__art" data-reveal>
@@ -287,7 +303,7 @@ export function Closing() {
               <h2>Ready to turn e-waste into value?</h2>
               <p>Upload a photo of your old device and get an instant estimate.</p>
             </div>
-            <Link className="btn btn--light" to="/sell">
+            <Link className="btn btn--light" to="/sell" requireAuth onClick={(e) => { if (!session) { e.preventDefault(); navigate('/login') } }}>
               Get my estimate <Icons.arrow width="18" height="18" />
             </Link>
           </div>

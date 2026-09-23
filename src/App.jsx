@@ -4,6 +4,7 @@ import Hero from './components/Hero.jsx'
 import { Features, HowItWorks, Flow, Partners, Closing } from './components/Sections.jsx'
 import Journey from './components/Journey.jsx'
 import Rewards from './components/Rewards.jsx'
+import { useSession } from './lib/auth.js'
 import { usePath } from './router.jsx'
 
 // The valuation flow only loads when someone opens it.
@@ -30,15 +31,22 @@ function Home() {
 
 export default function App() {
   const path = usePath()
+  const session = useSession()
+
+  const protectedRoute = path.startsWith('/sell') || path.startsWith('/partner')
+  const authRoute = path.startsWith('/login') || path.startsWith('/signup')
+
   return (
     <>
       <Header />
       <Suspense fallback={<main style={{ minHeight: '100vh' }} />}>
-        {path.startsWith('/sell') ? (
+        {protectedRoute && !session ? (
+          <AuthPage mode="login" />
+        ) : path.startsWith('/sell') ? (
           <SellPage />
         ) : path.startsWith('/partner') ? (
           <PartnerPage />
-        ) : path.startsWith('/login') || path.startsWith('/signup') ? (
+        ) : authRoute ? (
           <AuthPage mode={path.startsWith('/signup') ? 'signup' : 'login'} />
         ) : (
           <Home />
